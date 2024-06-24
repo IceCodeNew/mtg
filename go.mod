@@ -13,7 +13,7 @@ require (
 	github.com/gotd/td v0.34.0
 	github.com/jarcoal/httpmock v1.3.1
 	github.com/mccutchen/go-httpbin v1.1.1
-	github.com/panjf2000/ants/v2 v2.9.1
+	github.com/panjf2000/ants/v2 v2.10.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prometheus/common v0.37.0 // indirect
