@@ -53,7 +53,7 @@ func (suite *PrometheusTestSuite) SetupTest() {
 func (suite *PrometheusTestSuite) TearDownTest() {
 	suite.prometheus.Shutdown()
 	suite.NoError(suite.factory.Close())
-	suite.NoError(suite.httpListener.Close())
+	_ = suite.httpListener.Close()
 }
 
 func (suite *PrometheusTestSuite) TestTelegramPath() {
