@@ -56,7 +56,7 @@ func (suite *NetworkTestSuite) TestRealHTTPRequest() {
 
 	client := ntw.MakeHTTPClient(nil)
 
-	resp, err := client.Get("https://httpbin.org/headers") //nolint: noctx
+	resp, err := client.Get("https://httpbingo.org/headers") //nolint: noctx
 	suite.NoError(err)
 
 	defer resp.Body.Close()
@@ -67,12 +67,12 @@ func (suite *NetworkTestSuite) TestRealHTTPRequest() {
 
 	jsonStruct := struct {
 		Headers struct {
-			UserAgent string `json:"User-Agent"` //nolint: tagliatelle
+			UserAgent []string `json:"User-Agent"` //nolint: tagliatelle
 		} `json:"headers"`
 	}{}
 
 	suite.NoError(json.Unmarshal(data, &jsonStruct))
-	suite.Equal("itsme", jsonStruct.Headers.UserAgent)
+	suite.Equal([]string{"itsme"}, jsonStruct.Headers.UserAgent)
 }
 
 func (suite *NetworkTestSuite) TestIncorrectTimeout() {

@@ -66,7 +66,7 @@ func (suite *ProxyTestSuite) SetupSuite() {
 	go allowlist.Run(time.Second)
 
 	suite.opts = &mtglib.ProxyOpts{
-		Secret:          mtglib.GenerateSecret("httpbin.org"),
+		Secret:          mtglib.GenerateSecret("httpbingo.org"),
 		Network:         ntw,
 		AntiReplayCache: antireplay.NewNoop(),
 		IPBlocklist:     ipblocklist.NewNoop(),
@@ -164,7 +164,7 @@ func (suite *ProxyTestSuite) TestCannotInitIncorrectPreferIP() {
 }
 
 func (suite *ProxyTestSuite) TestDomainFrontingAddress() {
-	suite.Equal("httpbin.org:443", suite.p.DomainFrontingAddress())
+	suite.Equal("httpbingo.org:443", suite.p.DomainFrontingAddress())
 }
 
 func (suite *ProxyTestSuite) TestHTTPSRequest() {
