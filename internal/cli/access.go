@@ -129,7 +129,9 @@ func (a *Access) getIP(ntw mtglib.Network, protocol string) net.IP {
 
 	defer func() {
 		io.Copy(io.Discard, resp.Body) //nolint: errcheck
-		resp.Body.Close()
+		if err := resp.Body.Close(); err != nil {
+			panic(err)
+		}
 	}()
 
 	data, err := io.ReadAll(resp.Body)
