@@ -9,15 +9,12 @@
 package main
 
 import (
-	"math/rand"
-	"time"
-
 	"github.com/IceCodeNew/mtg/internal/cli"
 	"github.com/alecthomas/kong"
 )
 
 func main() {
-	rand.Seed(time.Now().UTC().UnixNano())
+	// rand.Seed(time.Now().UTC().UnixNano())
 
 	cli := &cli.CLI{}
 	ctx := kong.Parse(cli, kong.Vars{

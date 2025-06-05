@@ -2,9 +2,9 @@ package faketls_test
 
 import (
 	"bytes"
+	"crypto/rand"
 	"errors"
 	"io"
-	"math/rand"
 	"testing"
 
 	"github.com/IceCodeNew/mtg/internal/testlib"
