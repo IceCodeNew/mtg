@@ -14,8 +14,6 @@ import (
 )
 
 func main() {
-	// rand.Seed(time.Now().UTC().UnixNano())
-
 	cli := &cli.CLI{}
 	ctx := kong.Parse(cli, kong.Vars{
 		"version": getVersion(),
