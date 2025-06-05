@@ -1,8 +1,6 @@
 package telegram
 
-import (
-	"math/rand/v2"
-)
+import "math/rand/v2"
 
 type addressPool struct {
 	v4 [][]tgAddr
