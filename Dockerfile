@@ -1,7 +1,7 @@
 ###############################################################################
 # BUILD STAGE
 
-FROM golang:1.19-alpine AS build
+FROM golang:1.24.3-alpine3.22 AS build
 
 RUN set -x \
   && apk --no-cache --update add \
