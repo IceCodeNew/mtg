@@ -66,7 +66,7 @@ func (suite *ProxyTestSuite) SetupSuite() {
 	go allowlist.Run(time.Second)
 
 	suite.opts = &mtglib.ProxyOpts{
-		Secret:          mtglib.GenerateSecret("httpbin.org"),
+		Secret:          mtglib.GenerateSecret("d1sdh26o090vk5.cloudfront.net"),
 		Network:         ntw,
 		AntiReplayCache: antireplay.NewNoop(),
 		IPBlocklist:     ipblocklist.NewNoop(),
@@ -91,7 +91,8 @@ func (suite *ProxyTestSuite) SetupSuite() {
 
 func (suite *ProxyTestSuite) TearDownSuite() {
 	if suite.listener != nil {
-		suite.listener.Close()
+		err := suite.listener.Close()
+		suite.NoError(err)
 	}
 
 	if suite.p != nil {
@@ -164,7 +165,7 @@ func (suite *ProxyTestSuite) TestCannotInitIncorrectPreferIP() {
 }
 
 func (suite *ProxyTestSuite) TestDomainFrontingAddress() {
-	suite.Equal("httpbin.org:443", suite.p.DomainFrontingAddress())
+	suite.Equal("d1sdh26o090vk5.cloudfront.net:443", suite.p.DomainFrontingAddress())
 }
 
 func (suite *ProxyTestSuite) TestHTTPSRequest() {
@@ -182,7 +183,9 @@ func (suite *ProxyTestSuite) TestHTTPSRequest() {
 	resp, err := client.Get(addr) //nolint: noctx
 	suite.NoError(err)
 
-	defer resp.Body.Close()
+	defer func() {
+		suite.NoError(resp.Body.Close())
+	}()
 
 	suite.Equal(http.StatusOK, resp.StatusCode)
 
