@@ -204,7 +204,7 @@ func (suite *ProxyTestSuite) TestHTTPSRequest() {
 
 func (suite *ProxyTestSuite) TestMakeRealRequest() {
 	secret, _ := hex.DecodeString(suite.opts.Secret.Hex())
-	resolver, err := dcs.MTProxyResolver(
+	resolver, err := dcs.MTProxy(
 		suite.ProxyAddress(),
 		secret,
 		dcs.MTProxyOptions{},
