@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
+      # Default is true, cancels jobs for other platforms in the matrix if one fails
+      fail-fast: false
       matrix:
         go_version:
           - 1.23
