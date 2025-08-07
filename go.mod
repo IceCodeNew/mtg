@@ -29,7 +29,7 @@ require (
 )
 
 require (
-	github.com/txthinking/socks5 v0.0.0-20230325130024-4230056ae301
+	github.com/txthinking/socks5 v0.0.0-20250803014457-d3594b14cf12
 	github.com/yl2chen/cidranger v1.0.2
 )
 
