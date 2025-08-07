@@ -14,8 +14,8 @@ require (
 	github.com/mccutchen/go-httpbin/v2 v2.18.3
 	github.com/panjf2000/ants/v2 v2.11.3
 	github.com/pelletier/go-toml/v2 v2.2.4
-	github.com/prometheus/client_golang v1.22.0
-	github.com/prometheus/common v0.64.0 // indirect
+	github.com/prometheus/client_golang v1.23.0
+	github.com/prometheus/common v0.65.0 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/rs/zerolog v1.34.0
 	github.com/smira/go-statsd v1.3.4
