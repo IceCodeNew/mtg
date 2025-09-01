@@ -22,43 +22,43 @@ type tomlConfig struct {
 			Enabled   bool    `toml:"enabled" json:"enabled,omitempty"`
 			MaxSize   string  `toml:"max-size" json:"maxSize,omitempty"`
 			ErrorRate float64 `toml:"error-rate" json:"errorRate,omitempty"`
-		} `toml:"anti-replay" json:"antiReplay,omitempty"`
+		} `toml:"anti-replay" json:"antiReplay"`
 		Blocklist struct {
 			Enabled             bool     `toml:"enabled" json:"enabled,omitempty"`
 			DownloadConcurrency uint     `toml:"download-concurrency" json:"downloadConcurrency,omitempty"`
 			URLs                []string `toml:"urls" json:"urls,omitempty"`
 			UpdateEach          string   `toml:"update-each" json:"updateEach,omitempty"`
-		} `toml:"blocklist" json:"blocklist,omitempty"`
+		} `toml:"blocklist" json:"blocklist"`
 		Allowlist struct {
 			Enabled             bool     `toml:"enabled" json:"enabled,omitempty"`
 			DownloadConcurrency uint     `toml:"download-concurrency" json:"downloadConcurrency,omitempty"`
 			URLs                []string `toml:"urls" json:"urls,omitempty"`
 			UpdateEach          string   `toml:"update-each" json:"updateEach,omitempty"`
-		} `toml:"allowlist" json:"allowlist,omitempty"`
-	} `toml:"defense" json:"defense,omitempty"`
+		} `toml:"allowlist" json:"allowlist"`
+	} `toml:"defense" json:"defense"`
 	Network struct {
 		Timeout struct {
 			TCP  string `toml:"tcp" json:"tcp,omitempty"`
 			HTTP string `toml:"http" json:"http,omitempty"`
 			Idle string `toml:"idle" json:"idle,omitempty"`
-		} `toml:"timeout" json:"timeout,omitempty"`
+		} `toml:"timeout" json:"timeout"`
 		DOHIP   string   `toml:"doh-ip" json:"dohIp,omitempty"`
 		Proxies []string `toml:"proxies" json:"proxies,omitempty"`
-	} `toml:"network" json:"network,omitempty"`
+	} `toml:"network" json:"network"`
 	Stats struct {
 		StatsD struct {
 			Enabled      bool   `toml:"enabled" json:"enabled,omitempty"`
 			Address      string `toml:"address" json:"address,omitempty"`
 			MetricPrefix string `toml:"metric-prefix" json:"metricPrefix,omitempty"`
 			TagFormat    string `toml:"tag-format" json:"tagFormat,omitempty"`
-		} `toml:"statsd" json:"statsd,omitempty"`
+		} `toml:"statsd" json:"statsd"`
 		Prometheus struct {
 			Enabled      bool   `toml:"enabled" json:"enabled,omitempty"`
 			BindTo       string `toml:"bind-to" json:"bindTo,omitempty"`
 			HTTPPath     string `toml:"http-path" json:"httpPath,omitempty"`
 			MetricPrefix string `toml:"metric-prefix" json:"metricPrefix,omitempty"`
-		} `toml:"prometheus" json:"prometheus,omitempty"`
-	} `toml:"stats" json:"stats,omitempty"`
+		} `toml:"prometheus" json:"prometheus"`
+	} `toml:"stats" json:"stats"`
 }
 
 func Parse(rawData []byte) (*Config, error) {

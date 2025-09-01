@@ -320,7 +320,7 @@ func NewProxy(opts ProxyOpts) (*Proxy, error) {
 	}
 
 	pool, err := ants.NewPoolWithFunc(opts.getConcurrency(),
-		func(arg interface{}) {
+		func(arg any) {
 			proxy.ServeConn(arg.(essentials.Conn)) //nolint: forcetypeassert
 		},
 		ants.WithLogger(opts.getLogger("ants")),
