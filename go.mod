@@ -20,7 +20,7 @@ require (
 	github.com/rs/zerolog v1.34.0
 	github.com/smira/go-statsd v1.3.4
 	github.com/stretchr/objx v0.5.2 // indirect
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/tylertreat/BoomFilters v0.0.0-20250630160909-db6545748bc4
 	golang.org/x/crypto v0.41.0
 	golang.org/x/net v0.42.0 // indirect
