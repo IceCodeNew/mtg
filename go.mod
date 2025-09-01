@@ -21,7 +21,7 @@ require (
 	github.com/smira/go-statsd v1.3.4
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/stretchr/testify v1.10.0
-	github.com/tylertreat/BoomFilters v0.0.0-20250603162721-abf33679c3cf
+	github.com/tylertreat/BoomFilters v0.0.0-20250630160909-db6545748bc4
 	golang.org/x/crypto v0.41.0
 	golang.org/x/net v0.42.0 // indirect
 	golang.org/x/sys v0.35.0
