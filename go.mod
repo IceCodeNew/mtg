@@ -1,6 +1,6 @@
 module github.com/IceCodeNew/mtg
 
-go 1.24
+go 1.24.0
 
 require (
 	github.com/OneOfOne/xxhash v1.2.8
@@ -24,7 +24,7 @@ require (
 	github.com/tylertreat/BoomFilters v0.0.0-20250630160909-db6545748bc4
 	golang.org/x/crypto v0.41.0
 	golang.org/x/net v0.43.0 // indirect
-	golang.org/x/sys v0.35.0
+	golang.org/x/sys v0.37.0
 	google.golang.org/protobuf v1.36.6 // indirect
 )
 
