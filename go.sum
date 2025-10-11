@@ -130,6 +130,8 @@ github.com/txthinking/runnergroup v0.0.0-20250224021307-5864ffeb65ae h1:ArVM1jIC
 github.com/txthinking/runnergroup v0.0.0-20250224021307-5864ffeb65ae/go.mod h1:cldYm15/XHcGt7ndItnEWHwFZo7dinU+2QoyjfErhsI=
 github.com/txthinking/socks5 v0.0.0-20250803014457-d3594b14cf12 h1:L09KVukszx1o8Riju6mJZqEhcf3+9hifSU/tk60oSro=
 github.com/txthinking/socks5 v0.0.0-20250803014457-d3594b14cf12/go.mod h1:ntmMHL/xPq1WLeKiw8p/eRATaae6PiVRNipHFJxI8PM=
+github.com/txthinking/socks5 v0.0.0-20251011041537-5c31f201a10e h1:xA7GVlbz6teIF4FdvuqwbX6C4tiqNk2PH7FRPIDerao=
+github.com/txthinking/socks5 v0.0.0-20251011041537-5c31f201a10e/go.mod h1:ntmMHL/xPq1WLeKiw8p/eRATaae6PiVRNipHFJxI8PM=
 github.com/tylertreat/BoomFilters v0.0.0-20250630160909-db6545748bc4 h1:NY8dlg1XXMOf6B7rTYTESijQt5eZQTSRnSiM+eydx/o=
 github.com/tylertreat/BoomFilters v0.0.0-20250630160909-db6545748bc4/go.mod h1:OYRfF6eb5wY9VRFkXJH8FFBi3plw2v+giaIu7P054pM=
 github.com/yl2chen/cidranger v1.0.2 h1:lbOWZVCG1tCRX4u24kuM1Tb4nHqWkDxwLdoS+SevawU=
