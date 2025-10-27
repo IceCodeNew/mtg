@@ -1,6 +1,6 @@
 module github.com/IceCodeNew/mtg
 
-go 1.24
+go 1.25
 
 require (
 	github.com/OneOfOne/xxhash v1.2.8
