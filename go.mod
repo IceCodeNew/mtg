@@ -24,7 +24,7 @@ require (
 	github.com/tylertreat/BoomFilters v0.0.0-20251001182300-5b3723cc64ae
 	golang.org/x/crypto v0.43.0
 	golang.org/x/net v0.45.0 // indirect
-	golang.org/x/sys v0.37.0
+	golang.org/x/sys v0.38.0
 	google.golang.org/protobuf v1.36.10 // indirect
 )
 
