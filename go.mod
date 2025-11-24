@@ -11,7 +11,7 @@ require (
 	github.com/d4l3k/messagediff v1.2.1 // indirect
 	github.com/gotd/td v0.131.0
 	github.com/jarcoal/httpmock v1.4.1
-	github.com/mccutchen/go-httpbin/v2 v2.18.3
+	github.com/mccutchen/go-httpbin/v2 v2.19.0
 	github.com/panjf2000/ants/v2 v2.11.3
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/prometheus/client_golang v1.23.2
