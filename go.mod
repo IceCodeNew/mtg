@@ -11,8 +11,8 @@ require (
 	github.com/d4l3k/messagediff v1.2.1 // indirect
 	github.com/gotd/td v0.136.0
 	github.com/jarcoal/httpmock v1.4.1
-	github.com/mccutchen/go-httpbin/v2 v2.19.0
-	github.com/panjf2000/ants/v2 v2.11.3
+	github.com/mccutchen/go-httpbin/v2 v2.20.0
+	github.com/panjf2000/ants/v2 v2.11.4
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.4 // indirect
@@ -24,7 +24,7 @@ require (
 	github.com/tylertreat/BoomFilters v0.0.0-20251117164519-53813c36cc1b
 	golang.org/x/crypto v0.46.0
 	golang.org/x/net v0.47.0 // indirect
-	golang.org/x/sys v0.39.0
+	golang.org/x/sys v0.40.0
 	google.golang.org/protobuf v1.36.10 // indirect
 )
 
