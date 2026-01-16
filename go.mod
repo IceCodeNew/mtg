@@ -9,10 +9,10 @@ require (
 	github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5
 	github.com/babolivier/go-doh-client v0.0.0-20201028162107-a76cff4cb8b6
 	github.com/d4l3k/messagediff v1.2.1 // indirect
-	github.com/gotd/td v0.136.0
+	github.com/gotd/td v0.137.0
 	github.com/jarcoal/httpmock v1.4.1
-	github.com/mccutchen/go-httpbin/v2 v2.19.0
-	github.com/panjf2000/ants/v2 v2.11.3
+	github.com/mccutchen/go-httpbin/v2 v2.20.0
+	github.com/panjf2000/ants/v2 v2.11.4
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.4 // indirect
@@ -22,9 +22,9 @@ require (
 	github.com/stretchr/objx v0.5.3 // indirect
 	github.com/stretchr/testify v1.11.1
 	github.com/tylertreat/BoomFilters v0.0.0-20251117164519-53813c36cc1b
-	golang.org/x/crypto v0.46.0
-	golang.org/x/net v0.47.0 // indirect
-	golang.org/x/sys v0.39.0
+	golang.org/x/crypto v0.47.0
+	golang.org/x/net v0.48.0 // indirect
+	golang.org/x/sys v0.40.0
 	google.golang.org/protobuf v1.36.10 // indirect
 )
 
@@ -60,18 +60,18 @@ require (
 	github.com/segmentio/asm v1.2.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/txthinking/runnergroup v0.0.0-20250224021307-5864ffeb65ae // indirect
-	go.opentelemetry.io/otel v1.38.0 // indirect
-	go.opentelemetry.io/otel/metric v1.38.0 // indirect
-	go.opentelemetry.io/otel/trace v1.38.0 // indirect
+	go.opentelemetry.io/otel v1.39.0 // indirect
+	go.opentelemetry.io/otel/metric v1.39.0 // indirect
+	go.opentelemetry.io/otel/trace v1.39.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.1 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
 	golang.org/x/exp v0.0.0-20230725093048-515e97ebf090 // indirect
-	golang.org/x/mod v0.30.0 // indirect
+	golang.org/x/mod v0.31.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/text v0.32.0 // indirect
-	golang.org/x/tools v0.39.0 // indirect
+	golang.org/x/text v0.33.0 // indirect
+	golang.org/x/tools v0.40.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	rsc.io/qr v0.2.0 // indirect
