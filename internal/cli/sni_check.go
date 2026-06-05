@@ -25,9 +25,6 @@ func runSNICheck(
 ) (sniCheckResult, error) {
 	res := sniCheckResult{}
 
-	ctx, cancelCause := context.WithCancelCause(ctx)
-	defer cancelCause(nil)
-
 	addrs, err := resolver.LookupIPAddr(ctx, conf.Secret.Host)
 	if err != nil {
 		return res, fmt.Errorf("cannot resolve addresses of %s: %w", conf.Secret.Host, err)
@@ -49,14 +46,9 @@ func runSNICheck(
 
 	if len(res.ResolvedIP4) > 0 {
 		wg.Go(func() {
-			var err error
-
 			ip := conf.PublicIPv4.Get(nil)
 			if ip == nil {
-				ip, err = getIP(ctx, ntw, "tcp4")
-				if err != nil {
-					cancelCause(err)
-				}
+				ip, _ = getIP(ctx, ntw, "tcp4")
 			}
 
 			if ip != nil {
@@ -67,14 +59,9 @@ func runSNICheck(
 
 	if len(res.ResolvedIP6) > 0 {
 		wg.Go(func() {
-			var err error
-
 			ip := conf.PublicIPv6.Get(nil)
 			if ip == nil {
-				ip, err = getIP(ctx, ntw, "tcp6")
-				if err != nil {
-					cancelCause(err)
-				}
+				ip, _ = getIP(ctx, ntw, "tcp6")
 			}
 
 			if ip != nil {
@@ -85,5 +72,5 @@ func runSNICheck(
 
 	wg.Wait()
 
-	return res, context.Cause(ctx)
+	return res, nil
 }
