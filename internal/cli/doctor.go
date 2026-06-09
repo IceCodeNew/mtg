@@ -24,54 +24,76 @@ import (
 )
 
 var (
+	funcs = template.FuncMap{
+		"join": strings.Join,
+	}
+
 	tplError = template.Must(
-		template.New("").Parse("  ‼️ {{ .description }}: {{ .error }}\n"),
+		template.New("").
+			Funcs(funcs).
+			Parse("  ‼️ {{ .description }}: {{ .error }}\n"),
 	)
 
 	tplWDeprecatedConfig = template.Must(
 		template.New("").
+			Funcs(funcs).
 			Parse(`  ⚠️ Option {{ .old | printf "%q" }}{{ if .old_section }} from section [{{ .old_section }}]{{ end }} is deprecated and will be removed in v{{ .when }}. Please use {{ .new | printf "%q" }}{{ if .new_section }} in [{{ .new_section }}] section{{ end }} instead.` + "\n"),
 	)
 
 	tplOTimeSkewness = template.Must(
 		template.New("").
+			Funcs(funcs).
 			Parse("  ✅ Time drift is {{ .drift }}, but tolerate-time-skewness is {{ .value }}\n"),
 	)
 	tplWTimeSkewness = template.Must(
 		template.New("").
+			Funcs(funcs).
 			Parse("  ⚠️ Time drift is {{ .drift }}, but tolerate-time-skewness is {{ .value }}. Please check ntp.\n"),
 	)
 	tplETimeSkewness = template.Must(
 		template.New("").
+			Funcs(funcs).
 			Parse("  ❌ Time drift is {{ .drift }}, but tolerate-time-skewness is {{ .value }}. You will get many rejected connections!\n"),
 	)
 
 	tplODCConnect = template.Must(
-		template.New("").Parse("  ✅ DC {{ .dc }} (rpc {{ .rtt }})\n"),
+		template.New("").
+			Funcs(funcs).
+			Parse("  ✅ DC {{ .dc }} (rpc {{ .rtt }})\n"),
 	)
 	tplEDCConnect = template.Must(
-		template.New("").Parse("  ❌ DC {{ .dc }}: {{ .error }}\n"),
+		template.New("").
+			Funcs(funcs).
+			Parse("  ❌ DC {{ .dc }}: {{ .error }}\n"),
 	)
 
 	tplODNSSNIMatch = template.Must(
-		template.New("").Parse("  ✅ IP address {{ .ip }} matches secret hostname {{ .hostname }}\n"),
+		template.New("").
+			Funcs(funcs).
+			Parse("  ✅ IP address {{ .ip }} matches secret hostname {{ .hostname }}\n"),
 	)
 	tplEDNSSNIMatch = template.Must(
-		template.New("").Parse("  ❌ Hostname {{ .hostname }} {{ if .resolved }}resolves to {{ .resolved }}, but the proxy's public IP is {{ if .ip4 }}{{ .ip4 }}{{ else }}<not detected>{{ end }} (IPv4) / {{ if .ip6 }}{{ .ip6 }}{{ else }}<not detected>{{ end }} (IPv6) — none of the resolved addresses match{{ else }}cannot be resolved to any host{{ end }}\n"),
+		template.New("").
+			Funcs(funcs).
+			Parse(`  ❌ Hostname {{ .hostname }} resolves to {{ join ", " .resolved }} but public IP is {{ .ip }}` + "\n"),
 	)
 
 	tplOFrontingDomain = template.Must(
-		template.New("").Parse("  ✅ {{ .address }} is reachable\n"),
+		template.New("").
+			Funcs(funcs).
+			Parse("  ✅ {{ .address }} is reachable\n"),
 	)
 	tplEFrontingDomain = template.Must(
-		template.New("").Parse("  ❌ {{ .address }}: {{ .error }}\n"),
+		template.New("").
+			Funcs(funcs).
+			Parse("  ❌ {{ .address }}: {{ .error }}\n"),
 	)
 )
 
 type Doctor struct {
 	conf *config.Config
 
-	ConfigPath      string `kong:"arg,required,type='existingfile',help='Path to the configuration file.',name='config-path'"` //nolint: lll
+	ConfigPath      string `kong:"arg,required,type='existingfile',help='Path to the configuration file.',name='config-path'"`                                                                       //nolint: lll
 	SkipNativeCheck bool   `kong:"help='Skip the native network connectivity check (useful when proxy chaining is configured and direct egress is not expected to work).',name='skip-native-check'"` //nolint: lll
 }
 
@@ -371,17 +393,16 @@ func (d *Doctor) checkFrontingDomain(ntw mtglib.Network) bool {
 }
 
 func (d *Doctor) checkSecretHost(resolver *net.Resolver, ntw mtglib.Network) bool {
-	res := runSNICheck(context.Background(), resolver, d.conf, ntw)
-
-	if res.ResolveErr != nil {
+	res, err := runSNICheck(context.Background(), d.conf, resolver, ntw)
+	if err != nil {
 		tplError.Execute(os.Stdout, map[string]any{ //nolint: errcheck
 			"description": fmt.Sprintf("cannot resolve DNS name of %s", d.conf.Secret.Host),
-			"error":       res.ResolveErr,
+			"error":       err,
 		})
 		return false
 	}
 
-	if !res.PublicIPKnown() {
+	if res.OurIP4 == "" && res.OurIP6 == "" {
 		tplError.Execute(os.Stdout, map[string]any{ //nolint: errcheck
 			"description": "cannot detect public IP address",
 			"error":       errors.New("cannot detect automatically and public-ipv4/public-ipv6 are not set in config"),
@@ -389,35 +410,38 @@ func (d *Doctor) checkSecretHost(resolver *net.Resolver, ntw mtglib.Network) boo
 		return false
 	}
 
-	if res.IPv4Match || res.IPv6Match {
-		var matched net.IP
+	ok := true
 
-		for _, ip := range res.Resolved {
-			if (res.OurIPv4 != nil && ip.String() == res.OurIPv4.String()) ||
-				(res.OurIPv6 != nil && ip.String() == res.OurIPv6.String()) {
-				matched = ip
-				break
-			}
+	if len(res.ResolvedIP4) > 0 {
+		if slices.Contains(res.ResolvedIP4, res.OurIP4) {
+			tplODNSSNIMatch.Execute(os.Stdout, map[string]any{ //nolint: errcheck
+				"ip":       res.OurIP4,
+				"hostname": d.conf.Secret.Host,
+			})
+		} else {
+			tplEDNSSNIMatch.Execute(os.Stdout, map[string]any{ //nolint: errcheck
+				"ip":       res.OurIP4,
+				"resolved": res.ResolvedIP4,
+				"hostname": d.conf.Secret.Host,
+			})
+			ok = false
 		}
-
-		tplODNSSNIMatch.Execute(os.Stdout, map[string]any{ //nolint: errcheck
-			"ip":       matched,
-			"hostname": d.conf.Secret.Host,
-		})
-		return true
+	}
+	if len(res.ResolvedIP6) > 0 {
+		if slices.Contains(res.ResolvedIP6, res.OurIP6) {
+			tplODNSSNIMatch.Execute(os.Stdout, map[string]any{ //nolint: errcheck
+				"ip":       res.OurIP6,
+				"hostname": d.conf.Secret.Host,
+			})
+		} else {
+			tplEDNSSNIMatch.Execute(os.Stdout, map[string]any{ //nolint: errcheck
+				"ip":       res.OurIP6,
+				"resolved": res.ResolvedIP6,
+				"hostname": d.conf.Secret.Host,
+			})
+			ok = false
+		}
 	}
 
-	strAddresses := make([]string, 0, len(res.Resolved))
-	for _, ip := range res.Resolved {
-		strAddresses = append(strAddresses, `"`+ip.String()+`"`)
-	}
-
-	tplEDNSSNIMatch.Execute(os.Stdout, map[string]any{ //nolint: errcheck
-		"hostname": d.conf.Secret.Host,
-		"resolved": strings.Join(strAddresses, ", "),
-		"ip4":      res.OurIPv4,
-		"ip6":      res.OurIPv6,
-	})
-
-	return false
+	return ok
 }
