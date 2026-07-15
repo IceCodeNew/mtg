@@ -1,6 +1,8 @@
 package config_test
 
 import (
+	"net"
+	"net/url"
 	"os"
 	"path/filepath"
 	"testing"
@@ -72,6 +74,45 @@ func (suite *ConfigTestSuite) TestString() {
 	conf, err := config.Parse(suite.ReadConfig("minimal.toml"))
 	suite.NoError(err)
 	suite.NotEmpty(conf.String())
+}
+
+func (suite *ConfigTestSuite) TestCompatibilityGetters() {
+	conf := &config.Config{}
+
+	suite.Equal(uint(7), conf.GetConcurrency(7))
+	suite.Equal(uint(443), conf.GetDomainFrontingPort(443))
+	suite.False(conf.GetDomainFrontingProxyProtocol(false))
+	suite.Nil(conf.GetDNS())
+
+	suite.Require().NoError(conf.Concurrency.Set("11"))
+	suite.Require().NoError(conf.DomainFrontingPort.Set("8443"))
+	suite.Require().NoError(conf.DomainFronting.Port.Set("9443"))
+	conf.DomainFrontingProxyProtocol.Value = true
+
+	suite.Equal(uint(11), conf.GetConcurrency(7))
+	suite.Equal(uint(9443), conf.GetDomainFrontingPort(443))
+	suite.True(conf.GetDomainFrontingProxyProtocol(false))
+
+	conf.DomainFronting.Port.Value = 0
+	suite.Equal(uint(8443), conf.GetDomainFrontingPort(443))
+
+	conf.DomainFrontingProxyProtocol.Value = false
+	conf.DomainFronting.ProxyProtocol.Value = true
+	suite.True(conf.GetDomainFrontingProxyProtocol(false))
+
+	conf.Network.DOHIP.Value = net.ParseIP("192.0.2.1")
+	suite.Equal(&url.URL{Scheme: "https", Host: "192.0.2.1"}, conf.GetDNS())
+
+	suite.Require().NoError(conf.Network.DNS.Set("udp://192.0.2.53"))
+	suite.Equal("udp://192.0.2.53", conf.GetDNS().String())
+}
+
+func (suite *ConfigTestSuite) TestValidateErrors() {
+	conf := &config.Config{}
+	suite.ErrorContains(conf.Validate(), "invalid secret")
+
+	suite.Require().NoError(conf.Secret.Set("7oe1GqLy6TBc38CV3jx7q09nb29nbGUuY29t"))
+	suite.ErrorContains(conf.Validate(), "incorrect bind-to")
 }
 
 func (suite *ConfigTestSuite) TestDomainFrontingIPIgnoredWhenHostSet() {

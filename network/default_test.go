@@ -54,6 +54,13 @@ func (suite *DefaultDialerTestSuite) TestConnectOk() {
 	conn.Close() //nolint: errcheck
 }
 
+func (suite *DefaultDialerTestSuite) TestConnectWithoutContext() {
+	conn, err := suite.d.Dial("tcp", suite.HTTPServerAddress())
+	suite.NoError(err)
+	suite.NotNil(conn)
+	suite.NoError(conn.Close())
+}
+
 func (suite *DefaultDialerTestSuite) TestHTTPRequest() {
 	httpClient := suite.MakeHTTPClient(suite.d)
 
