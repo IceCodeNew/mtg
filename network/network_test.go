@@ -39,16 +39,17 @@ func (values *headerValues) UnmarshalJSON(data []byte) error {
 func TestHeaderValues(t *testing.T) {
 	t.Parallel()
 
-	for name, test := range map[string]struct {
+	tests := []struct {
+		name     string
 		json     string
 		expected headerValues
 	}{
-		"single": {json: `"itsme"`, expected: headerValues{"itsme"}},
-		"array":  {json: `["itsme"]`, expected: headerValues{"itsme"}},
-	} {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
+		{name: "single", json: `"itsme"`, expected: headerValues{"itsme"}},
+		{name: "array", json: `["itsme"]`, expected: headerValues{"itsme"}},
+	}
 
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 			var actual headerValues
 			require.NoError(t, json.Unmarshal([]byte(test.json), &actual))
 			assert.Equal(t, test.expected, actual)
@@ -117,7 +118,7 @@ func (suite *NetworkTestSuite) TestRealHTTPRequest() {
 
 			return false
 		}
-		if candidate.StatusCode < http.StatusInternalServerError {
+		if candidate.StatusCode == http.StatusOK {
 			resp = candidate
 
 			return true

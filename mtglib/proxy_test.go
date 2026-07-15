@@ -186,7 +186,7 @@ func (suite *ProxyTestSuite) TestHTTPSRequest() {
 
 			return false
 		}
-		if candidate.StatusCode < http.StatusInternalServerError {
+		if candidate.StatusCode == http.StatusOK {
 			resp = candidate
 
 			return true
