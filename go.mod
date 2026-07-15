@@ -4,13 +4,13 @@ go 1.26.5
 
 require (
 	github.com/OneOfOne/xxhash v1.2.8
-	github.com/alecthomas/kong v1.15.0
+	github.com/alecthomas/kong v1.16.0
 	github.com/alecthomas/units v0.0.0-20240927000941-0f3dac36c52b
 	github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5
 	github.com/babolivier/go-doh-client v0.0.0-20201028162107-a76cff4cb8b6
 	github.com/d4l3k/messagediff v1.2.1 // indirect
 	github.com/jarcoal/httpmock v1.4.1
-	github.com/mccutchen/go-httpbin/v2 v2.23.1
+	github.com/mccutchen/go-httpbin/v2 v2.24.0
 	github.com/panjf2000/ants/v2 v2.12.1
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.5 // indirect
