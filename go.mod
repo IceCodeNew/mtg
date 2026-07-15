@@ -32,7 +32,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.4.3
 	github.com/pires/go-proxyproto v0.15.0
 	github.com/things-go/go-socks5 v0.1.1
-	github.com/txthinking/socks5 v0.0.0-20251011041537-5c31f201a10e
+	github.com/txthinking/socks5 v0.0.0-20260601051520-339b044ab0eb
 	github.com/yl2chen/cidranger v1.0.2
 )
 
