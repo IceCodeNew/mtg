@@ -4,12 +4,15 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/url"
 	"testing"
 	"time"
 
 	"github.com/IceCodeNew/mtg/network"
 	"github.com/stretchr/testify/suite"
 )
+
+const externalHTTPBinHost = "httpbin.io"
 
 type NetworkTestSuite struct {
 	suite.Suite
@@ -56,23 +59,41 @@ func (suite *NetworkTestSuite) TestRealHTTPRequest() {
 
 	client := ntw.MakeHTTPClient(nil)
 
-	resp, err := client.Get("https://httpbin.org/headers") //nolint: noctx
-	suite.NoError(err)
+	externalURL := (&url.URL{
+		Scheme: "https",
+		Host:   externalHTTPBinHost,
+		Path:   "/headers",
+	}).String()
+
+	var resp *http.Response
+	suite.Require().Eventually(func() bool {
+		candidate, err := client.Get(externalURL) //nolint: noctx
+		if err != nil {
+			return false
+		}
+		if candidate.StatusCode == http.StatusOK {
+			resp = candidate
+
+			return true
+		}
+
+		candidate.Body.Close() //nolint: errcheck
+
+		return false
+	}, 30*time.Second, time.Second)
 
 	defer resp.Body.Close() //nolint: errcheck
 
 	data, err := io.ReadAll(resp.Body)
 	suite.NoError(err)
-	suite.Equal(http.StatusOK, resp.StatusCode)
-
 	jsonStruct := struct {
 		Headers struct {
-			UserAgent string `json:"User-Agent"` //nolint: tagliatelle
+			UserAgent []string `json:"User-Agent"` //nolint: tagliatelle
 		} `json:"headers"`
 	}{}
 
 	suite.NoError(json.Unmarshal(data, &jsonStruct))
-	suite.Equal("itsme", jsonStruct.Headers.UserAgent)
+	suite.Equal([]string{"itsme"}, jsonStruct.Headers.UserAgent)
 }
 
 func (suite *NetworkTestSuite) TestIncorrectTimeout() {
