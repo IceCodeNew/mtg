@@ -9,29 +9,29 @@ require (
 	github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5
 	github.com/babolivier/go-doh-client v0.0.0-20201028162107-a76cff4cb8b6
 	github.com/d4l3k/messagediff v1.2.1 // indirect
-	github.com/jarcoal/httpmock v1.0.8
+	github.com/jarcoal/httpmock v1.4.1
 	github.com/mccutchen/go-httpbin v1.1.1
-	github.com/panjf2000/ants/v2 v2.12.0
+	github.com/panjf2000/ants/v2 v2.12.1
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.5 // indirect
 	github.com/prometheus/procfs v0.20.1 // indirect
-	github.com/rs/zerolog v1.35.0
+	github.com/rs/zerolog v1.35.1
 	github.com/smira/go-statsd v1.3.4
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/stretchr/testify v1.11.1
 	github.com/tylertreat/BoomFilters v0.0.0-20251117164519-53813c36cc1b
-	golang.org/x/crypto v0.49.0
-	golang.org/x/net v0.52.0
-	golang.org/x/sys v0.42.0
+	golang.org/x/crypto v0.54.0
+	golang.org/x/net v0.57.0
+	golang.org/x/sys v0.47.0
 	google.golang.org/protobuf v1.36.11 // indirect
 )
 
 require (
 	github.com/beevik/ntp v1.5.0
 	github.com/ncruces/go-dns v1.3.3
-	github.com/pelletier/go-toml/v2 v2.3.0
-	github.com/pires/go-proxyproto v0.11.0
-	github.com/things-go/go-socks5 v0.1.0
+	github.com/pelletier/go-toml/v2 v2.4.3
+	github.com/pires/go-proxyproto v0.15.0
+	github.com/things-go/go-socks5 v0.1.1
 	github.com/txthinking/socks5 v0.0.0-20251011041537-5c31f201a10e
 	github.com/yl2chen/cidranger v1.0.2
 )
