@@ -16,16 +16,8 @@ permissions:
 
 on:
   push:
-    tags:
-      - v*
     branches:
       - master
-      - stable
-      - v1
-  release:
-    types:
-      - published
-      - released
   pull_request:
     types:
       - opened
@@ -41,15 +33,16 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          persist-credentials: false
           submodules: recursive
 
-      - uses: jdx/mise-action@v3
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
         name: Install mise
 
       - name: Cache Go modules and build
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: |
             ~/go/pkg/mod
@@ -62,7 +55,7 @@ jobs:
         run: mise tasks run covtest
 
       - name: Collect coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@04b047e8bb82a0c002c8312c1c880fbc6a999d45 # v5
         with:
           files: ./coverage.txt
 
@@ -72,15 +65,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          persist-credentials: false
           submodules: recursive
 
-      - uses: jdx/mise-action@v3
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
         name: Install mise
 
       - name: Cache Go modules and build
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: |
             ~/go/pkg/mod
@@ -99,15 +93,16 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          persist-credentials: false
           submodules: recursive
 
-      - uses: jdx/mise-action@v3
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
         name: Install mise
 
       - name: Cache Go modules and build
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: |
             ~/go/pkg/mod
@@ -118,97 +113,3 @@ jobs:
 
       - name: Run linter
         run: mise tasks run lint
-
-  artifacts:
-    name: Build release artifacts
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          submodules: recursive
-
-      - uses: jdx/mise-action@v3
-        name: Install mise
-
-      - name: Cache Go modules
-        uses: actions/cache@v5
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-gomod-${{ hashFiles('go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-gomod-
-
-      - name: Cache cross-compilation build
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/go-build
-          key: ${{ runner.os }}-goreleaser-${{ hashFiles('go.sum') }}-${{ hashFiles('**/*.go') }}
-          restore-keys: |
-            ${{ runner.os }}-goreleaser-${{ hashFiles('go.sum') }}-
-            ${{ runner.os }}-goreleaser-
-
-      - name: Run release
-        run: mise tasks run release
-
-  docker:
-    name: Docker
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          submodules: recursive
-
-      - name: Get Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            nineseconds/mtg
-            ghcr.io/${{ github.repository }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=master,enable=${{ github.ref == 'refs/heads/master' }}
-            type=raw,value=stable,enable=${{ github.ref == 'refs/heads/stable' }}
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Setup BuildX
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Login to GitHub Container Registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          pull: true
-          context: .
-          platforms: linux/amd64,linux/arm64,linux/386,linux/arm/v7,linux/arm/v6
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
