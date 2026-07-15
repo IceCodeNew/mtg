@@ -14,12 +14,12 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/9seconds/mtg/v2/essentials"
-	"github.com/9seconds/mtg/v2/internal/config"
-	"github.com/9seconds/mtg/v2/internal/utils"
-	"github.com/9seconds/mtg/v2/mtglib"
-	"github.com/9seconds/mtg/v2/mtglib/dcprobe"
-	"github.com/9seconds/mtg/v2/network/v2"
+	"github.com/IceCodeNew/mtg/essentials"
+	"github.com/IceCodeNew/mtg/internal/config"
+	"github.com/IceCodeNew/mtg/internal/utils"
+	"github.com/IceCodeNew/mtg/mtglib"
+	"github.com/IceCodeNew/mtg/mtglib/dcprobe"
+	"github.com/IceCodeNew/mtg/network/v2"
 	"github.com/beevik/ntp"
 )
 

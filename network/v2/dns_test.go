@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/9seconds/mtg/v2/network/v2"
+	"github.com/IceCodeNew/mtg/network/v2"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )

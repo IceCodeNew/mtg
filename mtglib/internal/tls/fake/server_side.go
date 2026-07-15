@@ -9,7 +9,7 @@ import (
 	"io"
 	rnd "math/rand/v2"
 
-	"github.com/9seconds/mtg/v2/mtglib/internal/tls"
+	"github.com/IceCodeNew/mtg/mtglib/internal/tls"
 	"golang.org/x/crypto/curve25519"
 )
 

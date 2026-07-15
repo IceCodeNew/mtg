@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/9seconds/mtg/v2/internal/config"
-	"github.com/9seconds/mtg/v2/internal/utils"
+	"github.com/IceCodeNew/mtg/internal/config"
+	"github.com/IceCodeNew/mtg/internal/utils"
 )
 
 type accessResponse struct {

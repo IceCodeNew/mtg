@@ -7,9 +7,9 @@ import (
 	"crypto/sha256"
 	"testing"
 
-	"github.com/9seconds/mtg/v2/mtglib"
-	"github.com/9seconds/mtg/v2/mtglib/internal/tls"
-	"github.com/9seconds/mtg/v2/mtglib/internal/tls/fake"
+	"github.com/IceCodeNew/mtg/mtglib"
+	"github.com/IceCodeNew/mtg/mtglib/internal/tls"
+	"github.com/IceCodeNew/mtg/mtglib/internal/tls/fake"
 	"github.com/stretchr/testify/suite"
 )
 

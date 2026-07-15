@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/9seconds/mtg/v2/mtglib"
+	"github.com/IceCodeNew/mtg/mtglib"
 )
 
 type Optional struct {

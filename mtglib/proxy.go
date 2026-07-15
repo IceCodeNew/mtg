@@ -9,13 +9,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/9seconds/mtg/v2/essentials"
-	"github.com/9seconds/mtg/v2/mtglib/internal/dc"
-	"github.com/9seconds/mtg/v2/mtglib/internal/doppel"
-	"github.com/9seconds/mtg/v2/mtglib/obfuscation"
-	"github.com/9seconds/mtg/v2/mtglib/internal/relay"
-	"github.com/9seconds/mtg/v2/mtglib/internal/tls"
-	"github.com/9seconds/mtg/v2/mtglib/internal/tls/fake"
+	"github.com/IceCodeNew/mtg/essentials"
+	"github.com/IceCodeNew/mtg/mtglib/internal/dc"
+	"github.com/IceCodeNew/mtg/mtglib/internal/doppel"
+	"github.com/IceCodeNew/mtg/mtglib/internal/relay"
+	"github.com/IceCodeNew/mtg/mtglib/internal/tls"
+	"github.com/IceCodeNew/mtg/mtglib/internal/tls/fake"
+	"github.com/IceCodeNew/mtg/mtglib/obfuscation"
 	"github.com/panjf2000/ants/v2"
 )
 

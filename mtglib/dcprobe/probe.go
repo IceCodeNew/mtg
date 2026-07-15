@@ -23,8 +23,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/9seconds/mtg/v2/essentials"
-	"github.com/9seconds/mtg/v2/mtglib/obfuscation"
+	"github.com/IceCodeNew/mtg/essentials"
+	"github.com/IceCodeNew/mtg/mtglib/obfuscation"
 )
 
 // MTProto wire constants (https://core.telegram.org/schema/mtproto).
