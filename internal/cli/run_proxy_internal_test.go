@@ -79,11 +79,12 @@ func TestMakeIPLists(t *testing.T) {
 	blocklist, err := makeIPBlocklist(config.ListConfig{}, log, network, callback)
 	require.NoError(t, err)
 	require.NotNil(t, blocklist)
+	defer blocklist.Shutdown()
 
 	allowlist, err := makeIPAllowlist(config.ListConfig{}, log, network, callback)
 	require.NoError(t, err)
 	require.NotNil(t, allowlist)
-	allowlist.Shutdown()
+	defer allowlist.Shutdown()
 }
 
 func TestMakeEventStream(t *testing.T) {

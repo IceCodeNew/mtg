@@ -17,5 +17,6 @@ func TestGetVersion(t *testing.T) {
 }
 
 func TestRunProfile(t *testing.T) {
+	t.Setenv("MTG_PROF_PORT", "0")
 	runProfile()
 }

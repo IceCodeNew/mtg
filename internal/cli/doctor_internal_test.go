@@ -104,6 +104,7 @@ func TestDoctorCheckNetworkAddressesFiltersIPFamilies(t *testing.T) {
 func TestDoctorCheckFrontingDomain(t *testing.T) {
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
 	require.NoError(t, err)
+	defer listener.Close() //nolint:errcheck
 
 	port := uint(listener.Addr().(*net.TCPAddr).Port)
 	conf := &config.Config{}
@@ -123,6 +124,6 @@ func TestDoctorCheckFrontingDomain(t *testing.T) {
 	}()
 	require.True(t, doctor.checkFrontingDomain(network))
 	<-accepted
-	require.NoError(t, listener.Close())
+	listener.Close() //nolint:errcheck
 	require.False(t, doctor.checkFrontingDomain(network))
 }
