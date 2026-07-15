@@ -28,7 +28,6 @@ require (
 
 require (
 	github.com/beevik/ntp v1.5.0
-	github.com/mccutchen/go-httpbin v1.1.1
 	github.com/ncruces/go-dns v1.3.3
 	github.com/pelletier/go-toml/v2 v2.4.3
 	github.com/pires/go-proxyproto v0.15.0
