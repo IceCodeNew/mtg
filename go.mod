@@ -10,7 +10,7 @@ require (
 	github.com/babolivier/go-doh-client v0.0.0-20201028162107-a76cff4cb8b6
 	github.com/d4l3k/messagediff v1.2.1 // indirect
 	github.com/jarcoal/httpmock v1.4.1
-	github.com/mccutchen/go-httpbin v1.1.1
+	github.com/mccutchen/go-httpbin/v2 v2.23.1
 	github.com/panjf2000/ants/v2 v2.12.1
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.5 // indirect
@@ -28,6 +28,7 @@ require (
 
 require (
 	github.com/beevik/ntp v1.5.0
+	github.com/mccutchen/go-httpbin v1.1.1
 	github.com/ncruces/go-dns v1.3.3
 	github.com/pelletier/go-toml/v2 v2.4.3
 	github.com/pires/go-proxyproto v0.15.0
