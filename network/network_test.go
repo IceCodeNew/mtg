@@ -9,10 +9,52 @@ import (
 	"time"
 
 	"github.com/IceCodeNew/mtg/network"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
 const externalHTTPBinHost = "httpbin.io"
+
+type headerValues []string
+
+func (values *headerValues) UnmarshalJSON(data []byte) error {
+	var multiple []string
+	if err := json.Unmarshal(data, &multiple); err == nil {
+		*values = multiple
+
+		return nil
+	}
+
+	var single string
+	if err := json.Unmarshal(data, &single); err != nil {
+		return err
+	}
+
+	*values = []string{single}
+
+	return nil
+}
+
+func TestHeaderValues(t *testing.T) {
+	t.Parallel()
+
+	for name, test := range map[string]struct {
+		json     string
+		expected headerValues
+	}{
+		"single": {json: `"itsme"`, expected: headerValues{"itsme"}},
+		"array":  {json: `["itsme"]`, expected: headerValues{"itsme"}},
+	} {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			var actual headerValues
+			require.NoError(t, json.Unmarshal([]byte(test.json), &actual))
+			assert.Equal(t, test.expected, actual)
+		})
+	}
+}
 
 type NetworkTestSuite struct {
 	suite.Suite
@@ -69,9 +111,13 @@ func (suite *NetworkTestSuite) TestRealHTTPRequest() {
 	suite.Require().Eventually(func() bool {
 		candidate, err := client.Get(externalURL) //nolint: noctx
 		if err != nil {
+			if candidate != nil {
+				candidate.Body.Close() //nolint: errcheck
+			}
+
 			return false
 		}
-		if candidate.StatusCode == http.StatusOK {
+		if candidate.StatusCode < http.StatusInternalServerError {
 			resp = candidate
 
 			return true
@@ -83,17 +129,18 @@ func (suite *NetworkTestSuite) TestRealHTTPRequest() {
 	}, 30*time.Second, time.Second)
 
 	defer resp.Body.Close() //nolint: errcheck
+	suite.Require().Equal(http.StatusOK, resp.StatusCode)
 
 	data, err := io.ReadAll(resp.Body)
 	suite.NoError(err)
 	jsonStruct := struct {
 		Headers struct {
-			UserAgent []string `json:"User-Agent"` //nolint: tagliatelle
+			UserAgent headerValues `json:"User-Agent"` //nolint: tagliatelle
 		} `json:"headers"`
 	}{}
 
 	suite.NoError(json.Unmarshal(data, &jsonStruct))
-	suite.Equal([]string{"itsme"}, jsonStruct.Headers.UserAgent)
+	suite.Equal(headerValues{"itsme"}, jsonStruct.Headers.UserAgent)
 }
 
 func (suite *NetworkTestSuite) TestIncorrectTimeout() {

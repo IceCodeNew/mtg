@@ -180,9 +180,13 @@ func (suite *ProxyTestSuite) TestHTTPSRequest() {
 	suite.Require().Eventually(func() bool {
 		candidate, err := client.Get(addr) //nolint: noctx
 		if err != nil {
+			if candidate != nil {
+				candidate.Body.Close() //nolint: errcheck
+			}
+
 			return false
 		}
-		if candidate.StatusCode == http.StatusOK {
+		if candidate.StatusCode < http.StatusInternalServerError {
 			resp = candidate
 
 			return true
@@ -194,12 +198,13 @@ func (suite *ProxyTestSuite) TestHTTPSRequest() {
 	}, 30*time.Second, time.Second)
 
 	defer resp.Body.Close() //nolint: errcheck
+	suite.Require().Equal(http.StatusOK, resp.StatusCode)
 
 	data, err := io.ReadAll(resp.Body)
 	suite.NoError(err)
 
 	jsonStruct := struct {
-		Headers map[string][]string `json:"headers"`
+		Headers map[string]json.RawMessage `json:"headers"`
 	}{}
 
 	suite.NoError(json.Unmarshal(data, &jsonStruct))
