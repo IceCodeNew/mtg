@@ -1,0 +1,21 @@
+{
+  "forkProcessing": "enabled",
+  "extends": [
+    "config:best-practices",
+    "group:allNonMajor",
+    "group:githubArtifactActions",
+    "group:linters",
+    "schedule:earlyMondays",
+    "security:openssf-scorecard"
+  ],
+  "ignorePresets": ["docker:pinDigests"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["*"],
+      "minimumReleaseAge": "3 days",
+      "internalChecksFilter": "strict"
+    }
+  ],
+  "postUpdateOptions": ["gomodMassage"],
+  "timezone": "Asia/Shanghai"
+}
