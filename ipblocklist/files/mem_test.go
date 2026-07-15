@@ -34,6 +34,17 @@ func (suite *MemTestSuite) TestOk() {
 
 	suite.Contains(strData, "192.168.0.0/24")
 	suite.Contains(strData, "2001:db8:8000::/36")
+	suite.Equal("mem", file.String())
+}
+
+func (suite *MemTestSuite) TestEmpty() {
+	file := files.NewMem(nil)
+	reader, err := file.Open(context.Background())
+	suite.NoError(err)
+
+	data, err := io.ReadAll(reader)
+	suite.NoError(err)
+	suite.Empty(data)
 }
 
 func TestMem(t *testing.T) {

@@ -82,6 +82,16 @@ func (suite *HTTPTestSuite) TestOk() {
 	data, err := io.ReadAll(readCloser)
 	suite.NoError(err)
 	suite.Equal("Hooray!", strings.TrimSpace(string(data)))
+	suite.Equal(suite.httpServer.URL+"/readable", file.String())
+}
+
+func (suite *HTTPTestSuite) TestCanceledContext() {
+	file, err := suite.makeFile("readable")
+	suite.NoError(err)
+
+	suite.ctxCancel()
+	_, err = file.Open(suite.ctx)
+	suite.ErrorIs(err, context.Canceled)
 }
 
 func TestHTTP(t *testing.T) {

@@ -47,6 +47,7 @@ func (suite *LocalTestSuite) TestOk() {
 	suite.NoError(err)
 
 	suite.Equal("Hooray!", strings.TrimSpace(string(data)))
+	suite.Equal(suite.getLocalFile("readable"), file.String())
 }
 
 func TestLocal(t *testing.T) {
