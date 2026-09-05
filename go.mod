@@ -18,9 +18,9 @@ require (
 	github.com/rs/zerolog v1.35.1
 	github.com/smira/go-statsd v1.3.4
 	github.com/stretchr/objx v0.5.3 // indirect
-	github.com/stretchr/testify v1.12.0
+	github.com/stretchr/testify v1.12.1
 	github.com/tylertreat/BoomFilters v0.0.0-20251117164519-53813c36cc1b
-	golang.org/x/crypto v0.55.0
+	golang.org/x/crypto v0.56.0
 	golang.org/x/net v0.58.0
 	golang.org/x/sys v0.47.0
 	google.golang.org/protobuf v1.36.11 // indirect
@@ -31,7 +31,7 @@ require (
 	github.com/ncruces/go-dns v1.3.3
 	github.com/pelletier/go-toml/v2 v2.4.3
 	github.com/pires/go-proxyproto v0.15.0
-	github.com/things-go/go-socks5 v0.1.1
+	github.com/things-go/go-socks5 v0.1.3
 	github.com/txthinking/socks5 v0.0.0-20260601051520-339b044ab0eb
 	github.com/yl2chen/cidranger v1.0.2
 )
@@ -51,6 +51,7 @@ require (
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/txthinking/runnergroup v0.0.0-20250224021307-5864ffeb65ae // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/tools v0.41.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
