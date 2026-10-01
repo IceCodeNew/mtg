@@ -28,13 +28,6 @@
       "matchPackageNames": ["golang"],
       "groupName": "Go build toolchain",
       "groupSlug": "go-build-toolchain"
-    },
-    {
-      "matchManagers": ["github-actions", "mise"],
-      "matchDepNames": ["go"],
-      "groupName": "Go build toolchain",
-      "groupSlug": "go-build-toolchain",
-      "rangeStrategy": "bump"
     }
   ],
   "postUpdateOptions": ["gomodMassage"],
