@@ -19,6 +19,21 @@
       "matchManagers": ["gomod"],
       "matchDepNames": ["go"],
       "matchDepTypes": ["golang"],
+      "rangeStrategy": "bump",
+      "allowedVersions": "/^1\\.26\\.\\d+$/"
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["golang"],
+      "groupName": "Go build toolchain",
+      "groupSlug": "go-build-toolchain"
+    },
+    {
+      "matchManagers": ["github-actions", "mise"],
+      "matchDepNames": ["go"],
+      "groupName": "Go build toolchain",
+      "groupSlug": "go-build-toolchain",
       "rangeStrategy": "bump"
     }
   ],
