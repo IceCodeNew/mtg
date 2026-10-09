@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Keep the signing secret available to shell functions, not child installers.
+export -n GIT_SSH_KEY
+readonly GIT_USER_NAME='IceCodeNew'
+readonly GIT_USER_EMAIL='32576256+IceCodeNew@users.noreply.github.com'
+
+configure_git() (
+  local signing_dir="${XDG_CONFIG_HOME:-$HOME/.config}/maniud/git"
+  local signing_key="$signing_dir/commit-signing-key"
+  local allowed_signers="$signing_dir/allowed-signers"
+  local temporary_key
+  local temporary_allowed_signers
+
+  install -m 0700 -d "$signing_dir"
+  if [[ -z "${GIT_SSH_KEY:-}" ]]; then
+    printf '%s\n' 'GIT_SSH_KEY must contain the base64-encoded Git signing key.' >&2
+    return 1
+  fi
+
+  umask 077
+  temporary_key="$(mktemp "$signing_dir/.commit-signing-key.XXXXXX")"
+  temporary_allowed_signers="$(mktemp "$signing_dir/.allowed-signers.XXXXXX")"
+  trap 'rm -f "$temporary_key" "$temporary_allowed_signers"' EXIT
+  printf '%s' "$GIT_SSH_KEY" | base64 --decode >"$temporary_key" 2>/dev/null
+  ssh-keygen -y -f "$temporary_key" >/dev/null 2>&1
+  printf '%s %s\n' "$GIT_USER_EMAIL" "$(ssh-keygen -y -f "$temporary_key")" >"$temporary_allowed_signers"
+  install -m 0600 "$temporary_key" "$signing_key"
+  install -m 0600 "$temporary_allowed_signers" "$allowed_signers"
+  git config --global user.name "$GIT_USER_NAME"
+  git config --global user.email "$GIT_USER_EMAIL"
+  git config --global user.signingkey "$signing_key"
+  git config --global commit.gpgsign true
+  git config --global gpg.format ssh
+  git config --global gpg.ssh.program ssh-keygen
+  git config --global gpg.ssh.allowedSignersFile "$allowed_signers"
+)
+
+configure_amp_commit_privacy() {
+  local settings_dir="${XDG_CONFIG_HOME:-$HOME/.config}/amp"
+  local settings_path="$settings_dir/settings.json"
+
+  mkdir -p "$settings_dir"
+  SETTINGS_PATH="$settings_path" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+
+path = Path(os.environ["SETTINGS_PATH"])
+settings = json.loads(path.read_text()) if path.exists() else {}
+settings["amp.git.commit.ampThread.enabled"] = False
+settings["amp.git.commit.coauthor.enabled"] = False
+temporary = path.with_suffix(".tmp")
+temporary.write_text(json.dumps(settings, indent=2, sort_keys=True) + "\n")
+temporary.chmod(0o600)
+temporary.replace(path)
+PY
+}
+
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+if git remote get-url upstream >/dev/null 2>&1; then
+  git remote set-url upstream https://github.com/9seconds/mtg
+else
+  git remote add upstream https://github.com/9seconds/mtg
+fi
+
+configure_git
+configure_amp_commit_privacy
