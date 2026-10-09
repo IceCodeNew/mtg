@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/9seconds/mtg/v2/essentials"
-	"github.com/9seconds/mtg/v2/mtglib/internal/tls"
+	"github.com/IceCodeNew/mtg/essentials"
+	"github.com/IceCodeNew/mtg/mtglib/internal/tls"
 )
 
 // ScoutResult holds measurements from a single scout HTTP request.

@@ -15,11 +15,10 @@ permissions:
   statuses: read
 
 on:
-  push:
-  pull_request:
   schedule: # daily at 10:22 UTC
     - cron: '22 10 * * *'
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   vuln:
@@ -27,16 +26,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
+        persist-credentials: false
         submodules: recursive
 
-    - name: Setup Go
-      uses: actions/setup-go@v6
+    - name: Install mise
+      uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
       with:
-        go-version-file: go.mod
-        cache: true
+        install_args: go
 
     - name: Check for vulnerabilities
       run: |
-        go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+        mise exec go -- go run golang.org/x/vuln/cmd/govulncheck@latest ./...
