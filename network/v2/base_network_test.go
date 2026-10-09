@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/9seconds/mtg/v2/mtglib"
-	"github.com/9seconds/mtg/v2/network/v2"
+	"github.com/IceCodeNew/mtg/mtglib"
+	"github.com/IceCodeNew/mtg/network/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )

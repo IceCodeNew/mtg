@@ -7,18 +7,18 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/9seconds/mtg/v2/essentials"
-	"github.com/9seconds/mtg/v2/mtglib"
+	"github.com/IceCodeNew/mtg/essentials"
+	"github.com/IceCodeNew/mtg/mtglib"
 )
 
 type network struct {
 	net.Dialer
 
-	keepAliveConfig  net.KeepAliveConfig
-	httpTimeout      time.Duration
-	idleTimeout      time.Duration
-	userAgent        string
-	tcpNotSentLowat  int
+	keepAliveConfig net.KeepAliveConfig
+	httpTimeout     time.Duration
+	idleTimeout     time.Duration
+	userAgent       string
+	tcpNotSentLowat int
 }
 
 func (n *network) Dial(network, address string) (essentials.Conn, error) {
