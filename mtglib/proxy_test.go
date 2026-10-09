@@ -21,6 +21,8 @@ import (
 	"github.com/yl2chen/cidranger"
 )
 
+const externalHTTPBinHost = "httpbin.io"
+
 type ProxyTestSuite struct {
 	suite.Suite
 
@@ -61,7 +63,7 @@ func (suite *ProxyTestSuite) SetupSuite() {
 	go allowlist.Run(time.Second)
 
 	suite.opts = &mtglib.ProxyOpts{
-		Secret:          mtglib.GenerateSecret("httpbin.org"),
+		Secret:          mtglib.GenerateSecret(externalHTTPBinHost),
 		Network:         ntw,
 		AntiReplayCache: antireplay.NewNoop(),
 		IPBlocklist:     ipblocklist.NewNoop(),
@@ -159,7 +161,7 @@ func (suite *ProxyTestSuite) TestCannotInitIncorrectPreferIP() {
 }
 
 func (suite *ProxyTestSuite) TestDomainFrontingAddress() {
-	suite.Equal("httpbin.org:443", suite.p.DomainFrontingAddress())
+	suite.Equal(externalHTTPBinHost+":443", suite.p.DomainFrontingAddress())
 }
 
 func (suite *ProxyTestSuite) TestHTTPSRequest() {
@@ -174,24 +176,39 @@ func (suite *ProxyTestSuite) TestHTTPSRequest() {
 
 	addr := fmt.Sprintf("https://%s/headers", suite.ProxyAddress())
 
-	resp, err := client.Get(addr) //nolint: noctx
-	suite.Require().NoError(err)
+	var resp *http.Response
+	suite.Require().Eventually(func() bool {
+		candidate, err := client.Get(addr) //nolint: noctx
+		if err != nil {
+			if candidate != nil {
+				candidate.Body.Close() //nolint: errcheck
+			}
+
+			return false
+		}
+		if candidate.StatusCode == http.StatusOK {
+			resp = candidate
+
+			return true
+		}
+
+		candidate.Body.Close() //nolint: errcheck
+
+		return false
+	}, 30*time.Second, time.Second)
 
 	defer resp.Body.Close() //nolint: errcheck
-
-	suite.Equal(http.StatusOK, resp.StatusCode)
+	suite.Require().Equal(http.StatusOK, resp.StatusCode)
 
 	data, err := io.ReadAll(resp.Body)
 	suite.NoError(err)
 
 	jsonStruct := struct {
-		Headers struct {
-			TraceID string `json:"X-Amzn-Trace-Id"` //nolint: tagliatelle
-		} `json:"headers"`
+		Headers map[string]json.RawMessage `json:"headers"`
 	}{}
 
 	suite.NoError(json.Unmarshal(data, &jsonStruct))
-	suite.NotEmpty(jsonStruct.Headers.TraceID)
+	suite.NotEmpty(jsonStruct.Headers)
 }
 
 func TestProxy(t *testing.T) {
