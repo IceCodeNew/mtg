@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/9seconds/mtg/v2/mtglib/dcprobe"
+	"github.com/IceCodeNew/mtg/mtglib/dcprobe"
 )
 
 // TestProbeAgainstTelegramDCs makes outbound TCP connections to public

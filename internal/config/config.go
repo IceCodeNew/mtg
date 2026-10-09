@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/9seconds/mtg/v2/mtglib"
+	"github.com/IceCodeNew/mtg/mtglib"
 )
 
 type Optional struct {
@@ -71,10 +71,10 @@ type Config struct {
 			Interval TypeDuration    `json:"interval"`
 			Count    TypeConcurrency `json:"count"`
 		} `json:"keepAlive"`
-		DOHIP            TypeIP         `json:"dohIp"`
-		DNS              TypeDNSURI     `json:"dns"`
-		Proxies          []TypeProxyURL `json:"proxies"`
-		TCPNotSentLowat  TypeBytes      `json:"tcpNotSentLowat"`
+		DOHIP           TypeIP         `json:"dohIp"`
+		DNS             TypeDNSURI     `json:"dns"`
+		Proxies         []TypeProxyURL `json:"proxies"`
+		TCPNotSentLowat TypeBytes      `json:"tcpNotSentLowat"`
 	} `json:"network"`
 	Stats struct {
 		StatsD struct {

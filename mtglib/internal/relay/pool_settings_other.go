@@ -2,7 +2,7 @@
 
 package relay
 
-import "github.com/9seconds/mtg/v2/mtglib/internal/tls"
+import "github.com/IceCodeNew/mtg/mtglib/internal/tls"
 
 const (
 	bufPoolSize = tls.MaxRecordPayloadSize

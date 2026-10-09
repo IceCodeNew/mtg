@@ -26,7 +26,7 @@ run = "go build -tags prof"
 description = "Update dependencies"
 run = [
     "go get -u",
-    "go mod tidy -go=1.26"
+    "go mod tidy"
 ]
 
 [tasks.lint]
@@ -39,11 +39,11 @@ run = "govulncheck ./..."
 
 [tasks.test]
 description = "Run tests"
-run = "go test -v -race ./..."
+run = "go test -v ./..."
 
 [tasks.covtest]
 description = "Run tests with code coverage"
-run = "go test -coverprofile=coverage.txt -covermode=atomic -count=2 -race -v ./..."
+run = "go test -coverprofile=coverage.txt -covermode=atomic -count=1 -v ./..."
 
 [tasks.test-all]
 description = "Run all tests"

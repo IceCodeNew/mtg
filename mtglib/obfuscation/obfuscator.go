@@ -10,7 +10,7 @@ import (
 	"hash"
 	"io"
 
-	"github.com/9seconds/mtg/v2/essentials"
+	"github.com/IceCodeNew/mtg/essentials"
 )
 
 // Obfuscator implements the obfuscated2 handshake
