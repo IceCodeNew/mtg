@@ -10,20 +10,20 @@ require (
 	github.com/babolivier/go-doh-client v0.0.0-20201028162107-a76cff4cb8b6
 	github.com/d4l3k/messagediff v1.2.1 // indirect
 	github.com/jarcoal/httpmock v1.4.2
-	github.com/mccutchen/go-httpbin/v2 v2.25.0
+	github.com/mccutchen/go-httpbin/v2 v2.26.0
 	github.com/panjf2000/ants/v2 v2.12.1
-	github.com/prometheus/client_golang v1.24.1
-	github.com/prometheus/common v0.70.1 // indirect
-	github.com/prometheus/procfs v0.21.1 // indirect
+	github.com/prometheus/client_golang v1.25.0
+	github.com/prometheus/common v0.72.0 // indirect
+	github.com/prometheus/procfs v0.22.0 // indirect
 	github.com/rs/zerolog v1.35.1
 	github.com/smira/go-statsd v1.3.4
 	github.com/stretchr/objx v0.5.3 // indirect
 	github.com/stretchr/testify v1.12.1
 	github.com/tylertreat/BoomFilters v0.0.0-20251117164519-53813c36cc1b
-	golang.org/x/crypto v0.57.0
-	golang.org/x/net v0.60.0
-	golang.org/x/sys v0.48.0
-	google.golang.org/protobuf v1.36.11 // indirect
+	golang.org/x/crypto v0.58.0
+	golang.org/x/net v0.61.0
+	golang.org/x/sys v0.49.0
+	google.golang.org/protobuf v1.36.12 // indirect
 )
 
 require (
@@ -43,9 +43,9 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
-	github.com/prometheus/client_model v0.6.2 // indirect
+	github.com/prometheus/client_model v0.6.3 // indirect
 	github.com/txthinking/runnergroup v0.0.0-20250224021307-5864ffeb65ae // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
-	golang.org/x/sync v0.21.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/tools v0.41.0 // indirect
 )
