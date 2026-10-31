@@ -1,6 +1,6 @@
 module github.com/IceCodeNew/mtg
 
-go 1.26.9
+go 1.26.10
 
 require (
 	github.com/OneOfOne/xxhash v1.2.8
@@ -21,7 +21,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/tylertreat/BoomFilters v0.0.0-20251117164519-53813c36cc1b
 	golang.org/x/crypto v0.58.0
-	golang.org/x/net v0.61.0
+	golang.org/x/net v0.62.0
 	golang.org/x/sys v0.49.0
 	google.golang.org/protobuf v1.36.12 // indirect
 )
@@ -30,8 +30,8 @@ require (
 	github.com/beevik/ntp v1.6.0
 	github.com/ncruces/go-dns v1.3.3
 	github.com/pelletier/go-toml/v2 v2.4.3
-	github.com/pires/go-proxyproto v0.15.0
-	github.com/things-go/go-socks5 v0.1.3
+	github.com/pires/go-proxyproto v0.16.0
+	github.com/things-go/go-socks5 v0.1.4
 	github.com/txthinking/socks5 v0.0.0-20260601051520-339b044ab0eb
 	github.com/yl2chen/cidranger v1.0.2
 )
