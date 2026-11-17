@@ -11,7 +11,7 @@ import (
 	"github.com/IceCodeNew/mtg/essentials"
 	"github.com/IceCodeNew/mtg/network"
 	socks5 "github.com/armon/go-socks5"
-	"github.com/mccutchen/go-httpbin/httpbin"
+	"github.com/mccutchen/go-httpbin/v2/httpbin"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -36,7 +36,7 @@ type HTTPServerTestSuite struct {
 }
 
 func (suite *HTTPServerTestSuite) SetupSuite() {
-	suite.httpServer = httptest.NewServer(httpbin.NewHTTPBin().Handler())
+	suite.httpServer = httptest.NewServer(httpbin.New().Handler())
 }
 
 func (suite *HTTPServerTestSuite) TearDownSuite() {
