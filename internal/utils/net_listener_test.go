@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/9seconds/mtg/v2/internal/utils"
-	"github.com/9seconds/mtg/v2/mtglib"
+	"github.com/IceCodeNew/mtg/internal/utils"
+	"github.com/IceCodeNew/mtg/mtglib"
 )
 
 // firstConnBroken returns an already closed TCP connection first (setting

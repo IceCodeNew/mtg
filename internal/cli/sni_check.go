@@ -6,8 +6,8 @@ import (
 	"net"
 	"sync"
 
-	"github.com/9seconds/mtg/v2/internal/config"
-	"github.com/9seconds/mtg/v2/mtglib"
+	"github.com/IceCodeNew/mtg/internal/config"
+	"github.com/IceCodeNew/mtg/mtglib"
 )
 
 type sniCheckResult struct {

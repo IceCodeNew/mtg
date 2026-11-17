@@ -7,8 +7,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/9seconds/mtg/v2/essentials"
-	"github.com/9seconds/mtg/v2/mtglib"
+	"github.com/IceCodeNew/mtg/essentials"
+	"github.com/IceCodeNew/mtg/mtglib"
 )
 
 type multiNetwork struct {

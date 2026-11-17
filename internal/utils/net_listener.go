@@ -5,9 +5,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/9seconds/mtg/v2/internal/logthrottle"
-	"github.com/9seconds/mtg/v2/mtglib"
-	"github.com/9seconds/mtg/v2/network"
+	"github.com/IceCodeNew/mtg/internal/logthrottle"
+	"github.com/IceCodeNew/mtg/mtglib"
+	"github.com/IceCodeNew/mtg/network"
 )
 
 // socketOptionsLogInterval limits the warning about connections dropped
