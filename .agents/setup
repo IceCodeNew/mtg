@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+trap 'printf "Orb setup failed at line %s (exit %s).\n" "$LINENO" "$?" >&2' ERR
+
+# Keep the signing secret available to shell functions, not child installers.
+export -n GIT_SSH_KEY
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+run_step() {
+  local label="$1"
+  shift
+  printf '==> %s\n' "$label"
+  time "$@"
+}
+
+export PATH="$HOME/.local/bin:$PATH"
+if ! command -v fff-mcp >/dev/null; then
+  run_step 'Install official fff-mcp binary' bash -o pipefail -c 'curl -fsSL https://raw.githubusercontent.com/dmtrKovalenko/fff/main/install-mcp.sh | bash'
+fi
+run_step 'Verify fff-mcp installation' fff-mcp --version
+
+# The race detector requires a C compiler.
+missing=()
+for package in build-essential ca-certificates curl git openssh-client python3; do
+  if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -qx 'install ok installed'; then
+    missing+=("$package")
+  fi
+done
+if ((${#missing[@]})); then
+  run_step 'Refresh package index' sudo apt-get update
+  run_step 'Install system prerequisites' sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y "${missing[@]}"
+fi
+
+if ! command -v mise >/dev/null; then
+  run_step 'Install mise' bash -o pipefail -c 'curl -fsSL https://mise.run | sh'
+fi
+run_step 'Trust repository tool configuration' mise trust "$repo_root/.mise.toml"
+run_step 'Install locked Go development tools' mise install --locked
+
+# Persist the toolchain before installing network-dependent extras.
+# Non-interactive login shells must receive the same toolchain as setup.
+touch "$HOME/.bash_profile"
+if ! grep -Fqx '# mtg mise environment' "$HOME/.bash_profile"; then
+  cat >> "$HOME/.bash_profile" <<'PROFILE'
+
+# mtg mise environment
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(mise activate bash --shims)"
+PROFILE
+fi
+
+run_step 'Cache Go modules' mise exec -- go mod download
+
+install_ripwire() (
+  # Setup has no personal GitHub authentication. Use a fixed public release URL
+  # instead of the metadata API.
+  local version=0.6.5 architecture asset work staged binary_version
+  case "$(uname -m)" in
+    x86_64) architecture=x64 ;;
+    aarch64) architecture=arm64 ;;
+    *) printf 'Unsupported ripwire architecture: %s\n' "$(uname -m)" >&2; exit 1 ;;
+  esac
+  asset="ripwire-$version-linux-$architecture"
+  work="$(mktemp -d)"
+  staged=''
+  trap 'rm -rf "$work"; if [[ -n "$staged" ]]; then rm -f "$staged"; fi' EXIT
+  local url="https://github.com/redhat-et/ripwire/releases/download/v$version/$asset.tar.gz"
+  curl --fail --show-error --location --retry 3 --connect-timeout 15 --max-time 120 \
+    "$url" -o "$work/$asset.tar.gz"
+  curl --fail --show-error --location --retry 3 --connect-timeout 15 --max-time 120 \
+    "$url.sha256" -o "$work/$asset.tar.gz.sha256"
+  (cd "$work" && sha256sum --check --strict "$asset.tar.gz.sha256")
+  # Extract only the release's binary and bundled skills/hooks, without activation.
+  tar --extract --gzip --file "$work/$asset.tar.gz" --directory "$work" \
+    --no-same-owner "$asset/ripwire" "$asset/skills" "$asset/hooks"
+  # Check CPU and libc compatibility before replacement.
+  binary_version="$("$work/$asset/ripwire" --version)"
+  if [[ "$binary_version" != "ripwire $version "* ]]; then
+    printf 'Unexpected ripwire version in release v%s.\n' "$version" >&2
+    exit 1
+  fi
+  mkdir -p "$HOME/.local/bin" "$HOME/.local/share/ripwire"
+  local directory
+  for directory in skills hooks; do
+    rm -rf "$HOME/.local/share/ripwire/$directory"
+    cp -R "$work/$asset/$directory" "$HOME/.local/share/ripwire/$directory"
+  done
+  staged="$(mktemp "$HOME/.local/bin/.ripwire.XXXXXX")"
+  install -m 0755 "$work/$asset/ripwire" "$staged"
+  mv -f "$staged" "$HOME/.local/bin/ripwire"
+)
+
+install_agent_tools() {
+  # Keep orb-only tools outside the project's locked Go configuration.
+  # Node and npm are supplied by the orb base image.
+  mise install uv@0.12.23 npm:openskills@1.5.0
+  ln -sfn "$(mise which uv --tool uv@0.12.23)" "$HOME/.local/bin/uv"
+  ln -sfn "$(mise which openskills --tool npm:openskills@1.5.0)" "$HOME/.local/bin/openskills"
+  uv tool install 'nmem-cli==0.10.98'
+  nmem --version
+  openskills --version
+
+  # Preserve existing installations; new orbs get the verified release above.
+  if ! command -v ripwire >/dev/null 2>&1; then
+    install_ripwire
+  fi
+  ripwire --version
+
+  openskills install --global --universal --yes ninehills/skills
+  openskills install --global --universal --yes IceCodeNew/searching-with-fff/searching-with-fff
+  # The portable skill omits the separate Amp adapter (upstream amp/mcp.json).
+  cat > "$HOME/.agent/skills/searching-with-fff/mcp.json" <<'MCP'
+{
+  "fff": {
+    "command": "fff-mcp",
+    "args": [],
+    "includeTools": ["find_files", "grep", "multi_grep"]
+  }
+}
+MCP
+  local skill
+  for skill in cloudflare wrangler workers-best-practices; do
+    openskills install --global --universal --yes "cloudflare/skills/skills/$skill"
+  done
+
+  # Amp requires lowercase skill names; the upstream bundle uses "Lightpanda".
+  sed -i 's/^name: Lightpanda$/name: lightpanda/' "$HOME/.agent/skills/lightpanda/SKILL.md"
+
+  # OpenSkills uses .agent (singular); Amp discovers .agents (plural).
+  # Keep OpenSkills as the owner, exposing its files without copying them.
+  mkdir -p "$HOME/.agents/skills"
+  for skill in "$HOME/.agent/skills/"*/SKILL.md; do
+    local directory name destination
+    directory="$(dirname "$skill")"
+    name="$(basename "$directory")"
+    destination="$HOME/.agents/skills/$name"
+    if [[ ! -e "$destination" && ! -L "$destination" ]]; then
+      ln -s "$directory" "$destination"
+    fi
+  done
+}
+run_step 'Install agent tools and OpenSkills-managed skills' install_agent_tools
+
+printf '%s\n' 'Orb setup complete. Git signing is configured during resume.'

@@ -1,0 +1,35 @@
+{
+  "forkProcessing": "enabled",
+  "extends": [
+    "config:best-practices",
+    "group:allNonMajor",
+    "group:githubArtifactActions",
+    "group:linters",
+    "schedule:earlyMondays",
+    "security:openssf-scorecard"
+  ],
+  "ignorePresets": ["docker:pinDigests"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["*"],
+      "minimumReleaseAge": "3 days",
+      "internalChecksFilter": "strict"
+    },
+    {
+      "matchManagers": ["gomod"],
+      "matchDepNames": ["go"],
+      "matchDepTypes": ["golang"],
+      "rangeStrategy": "bump",
+      "allowedVersions": "/^1\\.26\\.\\d+$/"
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["golang"],
+      "groupName": "Go build toolchain",
+      "groupSlug": "go-build-toolchain"
+    }
+  ],
+  "postUpdateOptions": ["gomodMassage"],
+  "timezone": "Asia/Shanghai"
+}
