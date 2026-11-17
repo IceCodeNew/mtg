@@ -82,6 +82,20 @@ func (suite *HTTPTestSuite) TestOk() {
 	data, err := io.ReadAll(readCloser)
 	suite.NoError(err)
 	suite.Equal("Hooray!", strings.TrimSpace(string(data)))
+	suite.Run("user Given an HTTP blocklist When identifying its source Then the download URL is returned", func() {
+		suite.Equal(suite.httpServer.URL+"/readable", file.String())
+	})
+}
+
+func (suite *HTTPTestSuite) TestCanceledContext() {
+	suite.Run("user Given a canceled download context When opening an HTTP blocklist Then cancellation is returned", func() {
+		file, err := suite.makeFile("readable")
+		suite.NoError(err)
+
+		suite.ctxCancel()
+		_, err = file.Open(suite.ctx)
+		suite.ErrorIs(err, context.Canceled)
+	})
 }
 
 func TestHTTP(t *testing.T) {

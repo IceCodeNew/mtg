@@ -1,14 +1,19 @@
 package utils_test
 
 import (
+	"context"
 	"net"
+	"os"
 	"sync"
 	"sync/atomic"
+	"syscall"
 	"testing"
 	"time"
 
 	"github.com/IceCodeNew/mtg/internal/utils"
+	"github.com/IceCodeNew/mtg/logger"
 	"github.com/IceCodeNew/mtg/mtglib"
+	"github.com/stretchr/testify/require"
 )
 
 // firstConnBroken returns an already closed TCP connection first (setting
@@ -194,4 +199,60 @@ func (l *recordingLogger) warnings() []string {
 	defer l.mu.Unlock()
 
 	return append([]string(nil), l.msgs...)
+}
+
+func TestNewListenerRejectsInvalidAddress(t *testing.T) {
+	t.Run("user Given an invalid bind address When creating a listener Then creation fails", func(t *testing.T) {
+		_, err := utils.NewListener("not-an-address", 0, logger.NewNoopLogger())
+		require.Error(t, err)
+	})
+}
+
+func TestNewListenerAcceptsConnections(t *testing.T) {
+	t.Run("user Given a loopback bind address When creating a listener Then it accepts connections", func(t *testing.T) {
+		listener, err := utils.NewListener("127.0.0.1:0", 0, logger.NewNoopLogger())
+		require.NoError(t, err)
+		t.Cleanup(func() { require.NoError(t, listener.Close()) })
+
+		accepted := make(chan net.Conn, 1)
+		errs := make(chan error, 1)
+
+		go func() {
+			conn, acceptErr := listener.Accept()
+			if acceptErr != nil {
+				errs <- acceptErr
+
+				return
+			}
+
+			accepted <- conn
+		}()
+
+		client, err := net.Dial("tcp", listener.Addr().String())
+		require.NoError(t, err)
+		t.Cleanup(func() { require.NoError(t, client.Close()) })
+
+		select {
+		case conn := <-accepted:
+			require.NoError(t, conn.Close())
+		case err := <-errs:
+			t.Fatal(err)
+		case <-time.After(time.Second):
+			t.Fatal("listener did not accept connection")
+		}
+	})
+}
+
+func TestRootContextHandlesTerminationSignal(t *testing.T) {
+	t.Run("user Given the root context When receiving SIGTERM Then shutdown is requested by cancellation", func(t *testing.T) {
+		ctx := utils.RootContext()
+		require.NoError(t, syscall.Kill(os.Getpid(), syscall.SIGTERM))
+
+		select {
+		case <-ctx.Done():
+			require.ErrorIs(t, ctx.Err(), context.Canceled)
+		case <-time.After(time.Second):
+			t.Fatal("root context was not canceled")
+		}
+	})
 }

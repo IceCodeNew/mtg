@@ -47,6 +47,9 @@ func (suite *LocalTestSuite) TestOk() {
 	suite.NoError(err)
 
 	suite.Equal("Hooray!", strings.TrimSpace(string(data)))
+	suite.Run("user Given a local blocklist When identifying its source Then its file path is returned", func() {
+		suite.Equal(suite.getLocalFile("readable"), file.String())
+	})
 }
 
 func TestLocal(t *testing.T) {
